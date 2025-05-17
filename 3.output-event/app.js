@@ -1,52 +1,3 @@
-// 添加事件到日志
-function addEventToLog(gesture, confidence) {
-    const logItem = document.createElement('div');
-    logItem.className = 'event-log-item';
-    
-    const now = new Date();
-    const timeString = now.toLocaleTimeString();
-    
-    logItem.innerHTML = `
-        <span class="event-log-gesture">${gesture} (${Math.round(confidence * 100)}%)</span>
-        <span class="event-log-time">${timeString}</span>
-    `;
-    
-    eventLogDiv.appendChild(logItem);
-    
-    // 滚动到最新日志
-    eventLogDiv.scrollTop = eventLogDiv.scrollHeight;
-    
-    // 限制日志数量，保留最近的15条
-    while (eventLogDiv.children.length > 15) {
-        eventLogDiv.removeChild(eventLogDiv.firstChild);
-    }
-}
-
-// 清除日志
-function clearEventLog() {
-    eventLogDiv.innerHTML = '';
-}// 自定义事件 - 当识别到稳定的手势时触发
-function dispatchGestureEvent(gesture, confidence) {
-    // 创建自定义事件
-    const gestureEvent = new CustomEvent('gestureDetected', { 
-        detail: { 
-            gesture: gesture,
-            confidence: confidence,
-            timestamp: new Date().toISOString()
-        } 
-    });
-    
-    // 分发事件
-    document.dispatchEvent(gestureEvent);
-    
-    // 在控制台打印信息
-    console.log(`%c手势检测 → ${gesture}`, 'background: #2ecc71; color: white; padding: 4px 8px; border-radius: 4px; font-weight: bold;', 
-                `置信度: ${Math.round(confidence * 100)}%, 时间: ${new Date().toLocaleTimeString()}`);
-    
-    // 添加到事件日志
-    addEventToLog(gesture, confidence);
-}
-
 // 处理手势变化，使用防抖动技术确保手势稳定
 function handleGestureChange(newGesture, confidence) {
     // 只有在手势变化且置信度足够高时才处理
@@ -579,7 +530,4 @@ window.addEventListener('load', () => {
             }, 500);
         }, 2000);
     });
-    
-    // 添加清除日志按钮事件
-    clearLogButton.addEventListener('click', clearEventLog);
 });
