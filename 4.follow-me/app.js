@@ -16,8 +16,14 @@ const GesturePresets = {
 
 // 网络请求抽象
 async function sendPose(endpoint, pose) {
+    let apiHost = 'http://localhost:9099';
+    if (window.location.search.includes('url=')) {
+        apiHost = window.location.search.split('url=')[1];
+        apiHost = apiHost.replace(/\/$/, '');
+    }
+
     try {
-        const response = await fetch(`http://localhost:9099${endpoint}`, {
+        const response = await fetch(`${apiHost}${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ pose })
